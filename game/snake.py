@@ -1,6 +1,7 @@
 import pygame
 from .grid_item import GridItem
 from controllers.controller import Controller
+from config.colors import WHITE
 
 
 class Snake(GridItem):
@@ -27,14 +28,14 @@ class Snake(GridItem):
         return set(self.body)
 
     def draw(self, screen, cell_size):
+        font = pygame.font.SysFont(None, cell_size * 2)
         for x, y in self.body:
-            pygame.draw.rect(
+            rect = pygame.draw.rect(
                 screen, self.color, (x * cell_size, y * cell_size, cell_size, cell_size)
             )
             if self.body.index((x, y)) == 0:
-                # Draw a white circle in the center of the head
-                center = (x * cell_size + cell_size // 2, y * cell_size + cell_size // 2)
-                pygame.draw.circle(screen, (255, 255, 255), center, cell_size // 4)
+                text_surface = font.render("H", True, WHITE)
+                screen.blit(text_surface, rect)
 
     def get_next_move(self, apple_pos, blocked_cells, grid_size) -> tuple[int, int]:
         """Get the next move for the snake using its controller."""
