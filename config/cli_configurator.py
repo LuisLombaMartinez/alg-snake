@@ -15,31 +15,34 @@ class CLIConfigurator(Configurator):
     def build_configuration(self):
         use_default = input("Do you want to use default configuration? (Y/n): ")
         if use_default.lower() in ("y", "yes", ""):
-            snake1 = Snake(
-                "Snake 1",
-                (5, 5),
-                COLOR_CHOICES["green"],
-                AIController(
-                    StepLimitedPathfinder(AStar(ManhattanDistance()), max_steps=1000)
-                ),
-            )
-            snake2 = Snake(
-                "Snake 2",
-                (5, 15),
-                COLOR_CHOICES["blue"],
-                AIController(StepLimitedPathfinder(Dijkstra(), max_steps=1000)),
-            )
-            return Configuration(
-                background_color=COLOR_CHOICES["black"],
-                grid_color=COLOR_CHOICES["white"],
-                width=25,
-                height=25,
-                cell_size=20,
-                snakes=[snake1, snake2],
-                fps=20,
-            )
+            return self.build_default_configuration()
         else:
             return self.build_custom_configuration()
+
+    def build_default_configuration(self):
+        snake1 = Snake(
+            "Snake 1",
+            (5, 5),
+            COLOR_CHOICES["green"],
+            AIController(
+                StepLimitedPathfinder(AStar(ManhattanDistance()), max_steps=1000)
+            ),
+        )
+        snake2 = Snake(
+            "Snake 2",
+            (5, 15),
+            COLOR_CHOICES["blue"],
+            AIController(StepLimitedPathfinder(Dijkstra(), max_steps=1000)),
+        )
+        return Configuration(
+            background_color=COLOR_CHOICES["black"],
+            grid_color=COLOR_CHOICES["white"],
+            width=25,
+            height=25,
+            cell_size=20,
+            snakes=[snake1, snake2],
+            fps=20,
+        )
 
     def build_custom_configuration(self):
         width = self.choose_width()
@@ -138,11 +141,13 @@ class CLIConfigurator(Configurator):
         start_pos = (start_x, start_y)
 
         return Snake(name, start_pos, color, controller)
-    
+
     def choose_max_steps(self) -> int:
         try:
             max_steps = int(input("Enter maximum steps for pathfinding: ").strip())
-            return max_steps if max_steps > 0 else 100  # Default to 100 if invalid input
+            return (
+                max_steps if max_steps > 0 else 100
+            )  # Default to 100 if invalid input
         except ValueError:
             print("Invalid input, defaulting to 100 steps.")
             return 100
