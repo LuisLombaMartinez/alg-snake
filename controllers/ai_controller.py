@@ -18,6 +18,7 @@ class AIController(Controller):
             apple_pos,
             blocked_cells - {snake.head()},
             grid_size,
+            prev=snake.body[1] if len(snake.body) > 1 else None,
         )
         self.total_steps += steps
         # Guarantee a tuple is returned

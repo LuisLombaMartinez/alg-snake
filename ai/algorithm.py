@@ -8,6 +8,7 @@ class PathAlgorithm(ABC):
         self,
         start: tuple[int, int],
         goal: tuple[int, int],
+        prev: tuple[int, int] | None,
         blocked: set[tuple[int, int]],
         grid_size: tuple[int, int],
         max_steps: int,
@@ -25,14 +26,20 @@ class PathAlgorithm(ABC):
         """
         return self.__class__.__name__
 
-    def get_random_move(self, start: tuple[int, int]) -> tuple[int, int]:
+    def get_random_move(
+        self, start: tuple[int, int], prev: tuple[int, int] = None
+    ) -> tuple[int, int]:
         """
-        Returns a random move from the start position within the grid size.
-        This is a fallback method if no path is found.
+        Returns a random move from the start position, excluding the direction it came from.
+        - start: current head position
+        - prev: previous head position (None for first move)
         """
         x, y = start
         moves = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
-        return random.choice(moves)
+        if prev is not None:
+            # Remove the move that would return to prev
+            moves = [m for m in moves if m != prev]
+        return random.choice(moves) if moves else start
 
 
 class ConfigurableAlgorithm(PathAlgorithm):

@@ -3,7 +3,7 @@ from ai.algorithm import PathAlgorithm
 
 
 class BFS(PathAlgorithm):
-    def find_path(self, start, goal, blocked, grid_size, max_steps=None):
+    def find_path(self, start, goal, blocked, grid_size, max_steps=None, prev=None):
         width, height = grid_size
         queue = deque([start])
         came_from = {start: None}

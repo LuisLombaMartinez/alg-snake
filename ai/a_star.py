@@ -9,7 +9,7 @@ class AStar(ConfigurableAlgorithm):
     def __init__(self, heuristic: Heuristic):
         self.heuristic = heuristic or ManhattanDistance()
 
-    def find_path(self, start, goal, blocked, grid_size, max_steps=None):
+    def find_path(self, start, goal, blocked, grid_size, max_steps=None, prev=None):
         width, height = grid_size
         open_set = [(0, start)]
         came_from = {}
@@ -48,4 +48,4 @@ class AStar(ConfigurableAlgorithm):
                     f_score = tentative_g + self.heuristic(neighbor, goal)
                     heapq.heappush(open_set, (int(f_score), neighbor))
 
-        return [self.get_random_move(start)], steps  # No path found or max steps exceeded
+        return [self.get_random_move(start, prev)], steps

@@ -3,7 +3,7 @@ from ai.algorithm import PathAlgorithm
 
 
 class Dijkstra(PathAlgorithm):
-    def find_path(self, start, goal, blocked, grid_size, max_steps=None):
+    def find_path(self, start, goal, blocked, grid_size, max_steps=None, prev=None):
         width, height = grid_size
         heap = [(0, start)]
         came_from = {start: None}
@@ -32,7 +32,7 @@ class Dijkstra(PathAlgorithm):
                     came_from[nxt] = cur
 
         if goal not in came_from or steps >= max_steps:
-            return [self.get_random_move(start)], steps
+            return [self.get_random_move(start, prev=prev)], steps
 
         path = []
         cur = goal

@@ -37,9 +37,9 @@ class CLIConfigurator(Configurator):
         return Configuration(
             background_color=COLOR_CHOICES["black"],
             grid_color=COLOR_CHOICES["white"],
-            width=25,
-            height=25,
-            cell_size=20,
+            width=50,
+            height=50,
+            cell_size=15,
             snakes=[snake1, snake2],
             fps=20,
         )
