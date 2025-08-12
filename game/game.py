@@ -1,5 +1,6 @@
 import random
 import pygame
+from controllers.human_controller import HumanController, KEY_TO_DIR
 from game.apple import Apple
 from game.grid import Grid
 from config.configurator import Configurator
@@ -71,18 +72,23 @@ class Game:
             grow = next_move == self.apple.pos
             snake.move(next_move, grow)
 
-        # Update blocked cells after movement
-        new_blocked = self.grid.get_blocked_cells()
-
         # Check for collisions
         positions = [snake.head() for snake in self.snakes if snake.alive]
         for snake in self.snakes:
             if not snake.alive:
                 continue
-            # Collision with wall or blocked cell
-            if snake.head() in (
-                new_blocked - {snake.head()}
-            ) or not self.grid.in_bounds(snake.head()):
+            # Collision with wall
+            if not self.grid.in_bounds(snake.head()):
+                snake.alive = False
+            # Collision with own body
+            elif snake.head() in list(snake.body)[1:]:
+                snake.alive = False
+            # Collision with other snakes' bodies
+            elif any(
+                snake.head() in list(other.body)
+                for other in self.snakes
+                if other is not snake and other.alive
+            ):
                 snake.alive = False
             # Collision with another snake's head
             if positions.count(snake.head()) > 1:
@@ -109,14 +115,20 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-
+                elif event.type == pygame.KEYDOWN:
+                    for snake in self.snakes:
+                        if isinstance(snake.controller, HumanController):
+                            if event.key in KEY_TO_DIR:
+                                snake.controller.last_dir = KEY_TO_DIR[event.key]
             self.step()
             self.grid.render(screen)
 
             # Draw scores for each snake
             for idx, snake in enumerate(self.snakes):
                 info = snake.controller.get_display_info()
-                score_text = f"Snake {snake.name}: {snake.score} | {info} | Alive: {snake.alive}"
+                score_text = (
+                    f"Snake {snake.name}: {snake.score} | {info} | Alive: {snake.alive}"
+                )
                 text_surface = font.render(score_text, True, (255, 255, 255))
                 screen.blit(
                     text_surface, (10, 10 + idx * 30)

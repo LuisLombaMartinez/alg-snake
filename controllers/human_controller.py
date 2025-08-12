@@ -15,10 +15,6 @@ class HumanController(Controller):
         self.last_dir = (1, 0)  # start moving right
 
     def get_next_move(self, snake: Snake, grid_size, **kwargs) -> tuple[int, int]:
-        for event in pygame.event.get(pygame.KEYDOWN):
-            if event.key in KEY_TO_DIR:
-                self.last_dir = KEY_TO_DIR[event.key]
-
         head_x, head_y = snake.head()
         dx, dy = self.last_dir
         next_pos = (head_x + dx, head_y + dy)
