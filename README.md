@@ -5,7 +5,7 @@ It features modular controllers, multiple pathfinding algorithms (A*, Dijkstra, 
 
 ## Features
 
-- Play Snake with AI or human controllers
+- Play Snake with Algorithmic or human controllers
 - Compare different pathfinding algorithms (A*, Dijkstra, BFS, and more)
 - Easily add new algorithms or controllers
 - Configurable game settings (speed, colors, grid size, etc.)
@@ -46,7 +46,7 @@ You will be prompted to choose configuration options and controllers.
 
 ```
 alg-snake/
-├── ai/                # Pathfinding algorithms (A*, Dijkstra, BFS, etc.)
+├── algorithms/        # Pathfinding algorithms (A*, Dijkstra, BFS, etc.)
 ├── config/            # Configuration and CLI configurator
 ├── controllers/       # AI and human controllers
 ├── game/              # Game logic, grid, snake, apple, etc.

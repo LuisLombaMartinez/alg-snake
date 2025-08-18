@@ -1,12 +1,12 @@
 from config.configurator import Configurator
 from config.configuration import Configuration
 from config.colors import COLOR_CHOICES
-from ai.heuristics import ManhattanDistance, EuclideanDistance, ZeroHeuristic
-from ai.a_star import AStar
-from ai.dijkstra import Dijkstra
-from ai.bfs import BFS
-from ai.step_limiter import StepLimitedPathfinder
-from controllers.ai_controller import AIController
+from algorithms.heuristics import ManhattanDistance, EuclideanDistance, ZeroHeuristic
+from algorithms.a_star import AStar
+from algorithms.dijkstra import Dijkstra
+from algorithms.bfs import BFS
+from algorithms.step_limiter import StepLimitedPathfinder
+from controllers.algorithmic_controller import AlgorithmicController
 from controllers.human_controller import HumanController
 from game.snake import Snake
 
@@ -24,7 +24,7 @@ class CLIConfigurator(Configurator):
             "Snake 1",
             (5, 5),
             COLOR_CHOICES["green"],
-            AIController(
+            AlgorithmicController(
                 StepLimitedPathfinder(AStar(ManhattanDistance()), max_steps=1000)
             ),
         )
@@ -32,7 +32,7 @@ class CLIConfigurator(Configurator):
             "Snake 2",
             (5, 15),
             COLOR_CHOICES["blue"],
-            AIController(StepLimitedPathfinder(Dijkstra(), max_steps=1000)),
+            AlgorithmicController(StepLimitedPathfinder(Dijkstra(), max_steps=1000)),
         )
         return Configuration(
             background_color=COLOR_CHOICES["black"],
@@ -89,7 +89,7 @@ class CLIConfigurator(Configurator):
 
     def __choose_controller(self):
         print("Choose controller:")
-        print("1 - AI Controller")
+        print("1 - Algorithmic Controller")
         print("2 - Human Controller")
         choice = input("Enter choice [1-2]: ").strip()
         if choice == "2":
@@ -113,7 +113,7 @@ class CLIConfigurator(Configurator):
             algo = BFS()
 
         step_limited = StepLimitedPathfinder(algo, max_steps=self.choose_max_steps())
-        return AIController(step_limited)
+        return AlgorithmicController(step_limited)
 
     def __choose_snake_color(self):
         print("Choose snake color:")

@@ -1,5 +1,5 @@
 import heapq
-from ai.algorithm import PathAlgorithm
+from algorithms.algorithm import PathAlgorithm
 
 
 class Dijkstra(PathAlgorithm):

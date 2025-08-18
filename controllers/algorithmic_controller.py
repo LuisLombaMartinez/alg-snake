@@ -1,9 +1,9 @@
 from controllers.controller import Controller
 from game.snake import Snake
-from ai.step_limiter import StepLimitedPathfinder
+from algorithms.step_limiter import StepLimitedPathfinder
 
 
-class AIController(Controller):
+class AlgorithmicController(Controller):
     def __init__(self, step_limited: StepLimitedPathfinder):
         self.step_limited = step_limited
         self.total_steps = 0

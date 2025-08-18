@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from ai.heuristics import Heuristic
+from algorithms.heuristics import Heuristic
 from game.snake import Snake
 from config.configuration import Configuration
 from config.colors import BLACK, WHITE

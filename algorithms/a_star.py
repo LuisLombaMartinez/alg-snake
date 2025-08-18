@@ -1,8 +1,8 @@
 # ai/astar.py
 
 import heapq
-from ai.algorithm import ConfigurableAlgorithm
-from ai.heuristics import Heuristic, ManhattanDistance
+from algorithms.algorithm import ConfigurableAlgorithm
+from algorithms.heuristics import Heuristic, ManhattanDistance
 
 
 class AStar(ConfigurableAlgorithm):

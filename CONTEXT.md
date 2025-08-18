@@ -1,16 +1,7 @@
-snake_ai/
-│
-├── main.py
-├── game/
-│ ├── game.py
-│ ├── grid.py
-│ ├── grid_item.py
-│ ├── snake.py
-│ ├── apple.py
-│
-└── ai/
-├── **init**.py
-├── base.py
-├── bfs.py
-├── dijkstra.py
-└── astar.py
+alg-snake/
+├── algorithms/        # Pathfinding algorithms (A*, Dijkstra, BFS, etc.)
+├── config/            # Configuration and CLI configurator
+├── controllers/       # AI and human controllers
+├── game/              # Game logic, grid, snake, apple, etc.
+├── main.py            # Entry point
+└── README.md

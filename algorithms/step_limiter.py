@@ -1,4 +1,4 @@
-from ai.algorithm import PathAlgorithm
+from algorithms.algorithm import PathAlgorithm
 
 
 class StepLimitedPathfinder:
