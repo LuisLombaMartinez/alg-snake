@@ -48,7 +48,7 @@ You will be prompted to choose configuration options and controllers.
 alg-snake/
 ├── algorithms/        # Pathfinding algorithms (A*, Dijkstra, BFS, etc.)
 ├── config/            # Configuration and CLI configurator
-├── controllers/       # AI and human controllers
+├── controllers/       # Algorithmic, human, random, and replay controllers (more controllers can be added)
 ├── game/              # Game logic, grid, snake, apple, etc.
 ├── main.py            # Entry point
 └── README.md
