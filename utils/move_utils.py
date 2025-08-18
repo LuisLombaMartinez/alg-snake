@@ -1,5 +1,12 @@
 import random
 
+DIRECTION_DELTAS = {
+    "up": (0, -1),
+    "down": (0, 1),
+    "left": (-1, 0),
+    "right": (1, 0),
+}
+
 
 def get_random_move(
     start: tuple[int, int], prev: tuple[int, int] = None

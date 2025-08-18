@@ -9,7 +9,9 @@ from algorithms.step_limiter import StepLimitedPathfinder
 from controllers.algorithmic_controller import AlgorithmicController
 from controllers.human_controller import HumanController
 from controllers.random_controller import RandomController
+from controllers.replay_controller import ReplayController
 from game.snake import Snake
+from utils.move_loader import MoveLoader
 
 
 class CLIConfigurator(Configurator):
@@ -93,15 +95,20 @@ class CLIConfigurator(Configurator):
         print("1 - Algorithmic Controller")
         print("2 - Human Controller")
         print("3 - Random Controller")
+        print("4 - Replay Controller")
         choice = input("Enter choice [1-2]: ").strip()
         if choice == "2":
             return HumanController()
         elif choice == "3":
             return RandomController()
+        elif choice == "4":
+            path = input("Enter path to replay moves file: ").strip()
+            moves = MoveLoader.load_from_file(path)
+            return ReplayController(moves)
         else:
-            return self.__configure_ai_controller()
+            return self.__configure_algorithmic_controller()
 
-    def __configure_ai_controller(self):
+    def __configure_algorithmic_controller(self):
         print("Choose algorithm:")
         print("1 - A*")
         print("2 - Dijkstra")
