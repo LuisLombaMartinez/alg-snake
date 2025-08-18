@@ -8,6 +8,7 @@ from algorithms.bfs import BFS
 from algorithms.step_limiter import StepLimitedPathfinder
 from controllers.algorithmic_controller import AlgorithmicController
 from controllers.human_controller import HumanController
+from controllers.random_controller import RandomController
 from game.snake import Snake
 
 
@@ -91,9 +92,12 @@ class CLIConfigurator(Configurator):
         print("Choose controller:")
         print("1 - Algorithmic Controller")
         print("2 - Human Controller")
+        print("3 - Random Controller")
         choice = input("Enter choice [1-2]: ").strip()
         if choice == "2":
             return HumanController()
+        elif choice == "3":
+            return RandomController()
         else:
             return self.__configure_ai_controller()
 

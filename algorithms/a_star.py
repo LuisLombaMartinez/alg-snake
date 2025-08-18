@@ -3,6 +3,7 @@
 import heapq
 from algorithms.algorithm import ConfigurableAlgorithm
 from algorithms.heuristics import Heuristic, ManhattanDistance
+from utils.move_utils import get_random_move
 
 
 class AStar(ConfigurableAlgorithm):
@@ -48,4 +49,4 @@ class AStar(ConfigurableAlgorithm):
                     f_score = tentative_g + self.heuristic(neighbor, goal)
                     heapq.heappush(open_set, (int(f_score), neighbor))
 
-        return [self.get_random_move(start, prev)], steps
+        return [get_random_move(start, prev)], steps

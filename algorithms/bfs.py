@@ -1,5 +1,6 @@
 from collections import deque
 from algorithms.algorithm import PathAlgorithm
+from utils.move_utils import get_random_move
 
 
 class BFS(PathAlgorithm):
@@ -30,7 +31,7 @@ class BFS(PathAlgorithm):
                     came_from[nxt] = cur
 
         if goal not in came_from or steps >= max_steps:
-            return [self.get_random_move(start)], steps
+            return [get_random_move(start)], steps
 
         path = []
         cur = goal

@@ -1,5 +1,6 @@
 import heapq
 from algorithms.algorithm import PathAlgorithm
+from utils.move_utils import get_random_move
 
 
 class Dijkstra(PathAlgorithm):
@@ -32,7 +33,7 @@ class Dijkstra(PathAlgorithm):
                     came_from[nxt] = cur
 
         if goal not in came_from or steps >= max_steps:
-            return [self.get_random_move(start, prev=prev)], steps
+            return [get_random_move(start, prev=prev)], steps
 
         path = []
         cur = goal
