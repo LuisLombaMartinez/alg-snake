@@ -5,7 +5,7 @@ It features modular controllers, multiple pathfinding algorithms (A*, Dijkstra, 
 
 ## Features
 
-- Play Snake with Algorithmic or human controllers
+- Play Snake with Algorithmic, human controllers or more
 - Compare different pathfinding algorithms (A*, Dijkstra, BFS, and more)
 - Easily add new algorithms or controllers
 - Configurable game settings (speed, colors, grid size, etc.)
