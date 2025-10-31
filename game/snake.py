@@ -2,6 +2,7 @@ import pygame
 from .grid_item import GridItem
 from controllers.controller import Controller
 from config.colors import WHITE
+from typing import List, Tuple
 
 
 class Snake(GridItem):
@@ -40,3 +41,15 @@ class Snake(GridItem):
     def get_next_move(self, apple_pos, blocked_cells, grid_size) -> tuple[int, int]:
         """Get the next move for the snake using its controller."""
         return self.controller.get_next_move(self, apple_pos, blocked_cells, grid_size)
+
+
+class SnakeInfo:
+    def __init__(self, snake: Snake):
+        self.head: Tuple[int, int] = snake.head()
+        self.body: List[Tuple[int, int]] = snake.body[
+            1:
+        ]  # Exclude head from body for display
+        self.alive: bool = snake.alive
+
+    def __str__(self):
+        return f"SnakeInfo(head={self.head}, body={self.body}), alive={self.alive})"

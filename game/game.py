@@ -5,6 +5,7 @@ from game.apple import Apple
 from game.grid import Grid
 from config.configurator import Configurator
 from config.configuration import Configuration
+from game.snake import SnakeInfo
 
 
 class Game:
@@ -54,6 +55,8 @@ class Game:
         blocked = self.grid.get_blocked_cells()
         next_positions = {}
 
+        snake_infos = [SnakeInfo(snake) for snake in self.snakes]
+
         # First, get all next moves
         for snake in self.snakes:
             if not snake.alive:
@@ -63,6 +66,7 @@ class Game:
                 self.grid.get_size(),
                 apple_pos=self.apple.pos,
                 blocked_cells=blocked,
+                other_snakes=snake_infos,
             )
 
             next_positions[snake] = next_move
