@@ -1,3 +1,4 @@
+from typing import Tuple, Any
 from controllers.controller import Controller
 from game.snake import Snake
 from algorithms.step_limiter import StepLimitedPathfinder
@@ -8,17 +9,17 @@ class AlgorithmicController(Controller):
         self.step_limited = step_limited
         self.total_steps = 0
 
-    def get_next_move(
-        self, snake: Snake, grid_size, **kwargs: dict[str, any]
-    ) -> tuple[int, int]:
+    def get_next_move(self, snake: Snake, grid_size: Tuple[int, int], **kwargs: Any) -> Tuple[int, int]:
         apple_pos = kwargs.get("apple_pos")
-        blocked_cells = kwargs.get("blocked_cells")
+        blocked_cells = kwargs.get("blocked_cells", set())
+        prev = snake.body[1] if len(snake.body) > 1 else snake.head()
+
         path, steps = self.step_limited.find_path(
             snake.head(),
             apple_pos,
             blocked_cells - {snake.head()},
             grid_size,
-            prev=snake.body[1] if len(snake.body) > 1 else None,
+            prev=prev,
         )
         self.total_steps += steps
         # Guarantee a tuple is returned
@@ -26,8 +27,6 @@ class AlgorithmicController(Controller):
             return path[0]
         return snake.head()
 
-    def get_display_info(self):
-        algo_name = getattr(
-            self.step_limited.algorithm, "__class__", type(self.step_limited.algorithm)
-        ).__name__
+    def get_display_info(self) -> str:
+        algo_name = getattr(self.step_limited.algorithm, "__class__", type(self.step_limited.algorithm)).__name__
         return f"{algo_name} | Steps: {self.total_steps}"

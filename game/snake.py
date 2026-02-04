@@ -31,24 +31,20 @@ class Snake(GridItem):
     def draw(self, screen, cell_size):
         font = pygame.font.SysFont(None, cell_size * 2)
         for x, y in self.body:
-            rect = pygame.draw.rect(
-                screen, self.color, (x * cell_size, y * cell_size, cell_size, cell_size)
-            )
+            rect = pygame.draw.rect(screen, self.color, (x * cell_size, y * cell_size, cell_size, cell_size))
             if self.body.index((x, y)) == 0:
                 text_surface = font.render("H", True, WHITE)
                 screen.blit(text_surface, rect)
 
     def get_next_move(self, apple_pos, blocked_cells, grid_size) -> tuple[int, int]:
         """Get the next move for the snake using its controller."""
-        return self.controller.get_next_move(self, apple_pos, blocked_cells, grid_size)
+        return self.controller.get_next_move(self, grid_size, apple_pos=apple_pos, blocked_cells=blocked_cells)
 
 
 class SnakeInfo:
     def __init__(self, snake: Snake):
         self.head: Tuple[int, int] = snake.head()
-        self.body: List[Tuple[int, int]] = snake.body[
-            1:
-        ]  # Exclude head from body for display
+        self.body: List[Tuple[int, int]] = snake.body[1:]  # Exclude head from body for display
         self.alive: bool = snake.alive
 
     def __str__(self):

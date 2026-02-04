@@ -9,9 +9,8 @@ class RandomController(Controller):
         - snake: the Snake instance (so you can inspect head(), body, etc.)
         - grid_size: (width, height)
         """
-        return get_random_move(
-            snake.head(), prev=snake.body[1] if len(snake.body) > 1 else None
-        )
+        prev = snake.body[1] if len(snake.body) > 1 else snake.head()
+        return get_random_move(snake.head(), prev=prev)
 
     def get_display_info(self):
         return "Random Controller"

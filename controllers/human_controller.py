@@ -12,7 +12,7 @@ KEY_TO_DIR = {
 
 class HumanController(Controller):
     def __init__(self):
-        self.last_dir = (1, 0)  # start moving right
+        self.last_dir: tuple[int, int] = (1, 0)  # start moving right
 
     def get_next_move(self, snake: Snake, grid_size, **kwargs) -> tuple[int, int]:
         head_x, head_y = snake.head()
@@ -23,5 +23,5 @@ class HumanController(Controller):
             return snake.head()
         return next_pos
 
-    def get_display_info(self):
-        return "Human Controller", self.last_dir
+    def get_display_info(self) -> str:
+        return f"Human Controller (dir: {self.last_dir})"

@@ -1,3 +1,0 @@
-"""
-Genetics unit tests package.
-"""

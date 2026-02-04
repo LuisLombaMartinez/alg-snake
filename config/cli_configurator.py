@@ -1,3 +1,4 @@
+from pathlib import Path
 from config.configurator import Configurator
 from config.configuration import Configuration
 from config.colors import COLOR_CHOICES
@@ -10,26 +11,96 @@ from controllers.algorithmic_controller import AlgorithmicController
 from controllers.human_controller import HumanController
 from controllers.random_controller import RandomController
 from controllers.replay_controller import ReplayController
-from controllers.genetic_controller import GeneticController
-from genetics.fitness_evalutor import (
-    SinglePlayerAppleFitnessEvaluator,
-    SinglePlayerTimeFitnessEvaluator,
-    MultiplayerAppleFitnessEvaluator,
-    AggressiveFitnessEvaluator,
-    BalancedFitnessEvaluator,
-)
-from genetics.snake_simulation import GreedySnakeSimulation, ObstacleAwareSnakeSimulation, ConservativeSnakeSimulation
 from game.snake import Snake
 from utils.move_loader import MoveLoader
 
 
 class CLIConfigurator(Configurator):
     def build_configuration(self):
-        use_default = input("Do you want to use default configuration? (Y/n): ")
-        if use_default.lower() in ("y", "yes", ""):
+        """
+        Build configuration with option to load from YAML presets or create custom.
+        """
+        print("\n" + "=" * 60)
+        print("🐍 Welcome to alg-snake Configuration")
+        print("=" * 60)
+        print("\nChoose a configuration option:\n")
+
+        # Try to load available YAML configs
+        yaml_configs = self._get_available_yaml_configs()
+
+        option_num = 1
+        option_map = {}
+
+        # Show YAML preset options
+        if yaml_configs:
+            print("📁 Preset Configurations:")
+            for config_file in yaml_configs:
+                description = self._get_config_description(config_file)
+                print(f"  {option_num} - {config_file.stem}: {description}")
+                option_map[str(option_num)] = ("yaml", config_file)
+                option_num += 1
+            print()
+
+        # Show built-in options
+        print("🔧 Built-in Configurations:")
+        print(f"  {option_num} - Default (A* vs Dijkstra)")
+        option_map[str(option_num)] = ("builtin", "default")
+        option_num += 1
+
+        print(f"  {option_num} - Custom (Configure manually)")
+        option_map[str(option_num)] = ("builtin", "custom")
+
+        print("\n" + "-" * 60)
+        choice = input(f"Enter choice [1-{option_num}] (default 1): ").strip() or "1"
+        print("=" * 60 + "\n")
+
+        if choice not in option_map:
+            print(f"Invalid choice '{choice}', using default...")
+            choice = "1"
+
+        config_type, config_value = option_map[choice]
+
+        if config_type == "yaml":
+            return self._load_yaml_config(config_value)
+        elif config_value == "default":
             return self.build_default_configuration()
-        else:
+        else:  # custom
             return self.build_custom_configuration()
+
+    def _get_available_yaml_configs(self):
+        """Get list of available YAML configuration files."""
+        configs_dir = Path("configs")
+        if not configs_dir.exists():
+            return []
+        return sorted(configs_dir.glob("*.yaml"))
+
+    def _get_config_description(self, config_path):
+        """Extract description from first comment line of YAML file."""
+        try:
+            with open(config_path, "r") as f:
+                first_line = f.readline().strip()
+                if first_line.startswith("#"):
+                    return first_line[1:].strip()
+        except Exception:
+            pass
+        return "Configuration file"
+
+    def _load_yaml_config(self, config_path):
+        """Load configuration from YAML file using YAMLConfigurator."""
+        try:
+            from config.yaml_configurator import YAMLConfigurator
+
+            print(f"📄 Loading from {config_path.name}...\n")
+            configurator = YAMLConfigurator(str(config_path))
+            return configurator.build_configuration()
+        except ImportError:
+            print("⚠️  PyYAML not installed. Install with: pip install PyYAML")
+            print("Falling back to default configuration...\n")
+            return self.build_default_configuration()
+        except Exception as e:
+            print(f"⚠️  Error loading YAML config: {e}")
+            print("Falling back to default configuration...\n")
+            return self.build_default_configuration()
 
     def build_default_configuration(self):
         snake1 = Snake(
@@ -103,8 +174,7 @@ class CLIConfigurator(Configurator):
         print("2 - Human Controller")
         print("3 - Random Controller")
         print("4 - Replay Controller")
-        print("5 - Genetic Controller")
-        choice = input("Enter choice [1-5]: ").strip()
+        choice = input("Enter choice [1-4]: ").strip()
         if choice == "2":
             return HumanController()
         elif choice == "3":
@@ -113,8 +183,6 @@ class CLIConfigurator(Configurator):
             path = input("Enter path to replay moves file: ").strip()
             moves = MoveLoader.load_from_file(path)
             return ReplayController(moves)
-        elif choice == "5":
-            return self.__configure_genetic_controller()
         else:
             return self.__configure_algorithmic_controller()
 
@@ -204,117 +272,3 @@ class CLIConfigurator(Configurator):
         except ValueError:
             print("Invalid input, defaulting to 10 FPS.")
             return 10
-
-    def __configure_genetic_controller(self):
-        print("Configuring Genetic Algorithm Controller:")
-
-        # Choose fitness evaluator
-        print("\nChoose fitness evaluator strategy:")
-        print("1 - Single Player (Apple focus)")
-        print("2 - Single Player (Survival focus)")
-        print("3 - Multiplayer Competitive (Beat opponents to apple)")
-        print("4 - Aggressive (Attack other snakes)")
-        print("5 - Balanced (Mix of competitive and aggressive)")
-
-        fitness_choice = input("Enter choice [1-5]: ").strip()
-
-        # Map choices to evaluator classes for checking simulation needs
-        evaluator_classes = {
-            "1": SinglePlayerAppleFitnessEvaluator,
-            "2": SinglePlayerTimeFitnessEvaluator,
-            "3": MultiplayerAppleFitnessEvaluator,
-            "4": AggressiveFitnessEvaluator,
-            "5": BalancedFitnessEvaluator,
-        }
-
-        # Get the evaluator class to check if it needs simulation
-        evaluator_class = evaluator_classes.get(fitness_choice, SinglePlayerAppleFitnessEvaluator)
-
-        # Check if we need opponent simulation using class attribute
-        simulation = None
-        if evaluator_class.NEEDS_OPPONENT_SIMULATION:
-            print("\nChoose opponent prediction model:")
-            print("1 - Greedy (Always toward apple)")
-            print("2 - Obstacle Aware (Avoid collisions)")
-            print("3 - Conservative (Safety first)")
-
-            sim_choice = input("Enter choice [1-3]: ").strip()
-
-            # Create simulation
-            if sim_choice == "2":
-                simulation = ObstacleAwareSnakeSimulation()
-            elif sim_choice == "3":
-                simulation = ConservativeSnakeSimulation()
-            else:
-                simulation = GreedySnakeSimulation()
-
-        # Create fitness evaluator
-        if fitness_choice == "1":
-            fitness_evaluator = SinglePlayerAppleFitnessEvaluator()
-        elif fitness_choice == "2":
-            fitness_evaluator = SinglePlayerTimeFitnessEvaluator()
-        elif fitness_choice == "3":
-            fitness_evaluator = MultiplayerAppleFitnessEvaluator(simulation)
-        elif fitness_choice == "4":
-            aggression = self.__choose_aggression_level()
-            fitness_evaluator = AggressiveFitnessEvaluator(simulation, aggression)
-        elif fitness_choice == "5":
-            aggression_weight, cooperation_weight = self.__choose_balance_weights()
-            fitness_evaluator = BalancedFitnessEvaluator(simulation, aggression_weight, cooperation_weight)
-        else:
-            fitness_evaluator = SinglePlayerAppleFitnessEvaluator()
-
-        # GA parameters
-        population_size = self.__choose_population_size()
-        sequence_length = self.__choose_sequence_length()
-        mutation_rate = self.__choose_mutation_rate()
-
-        return GeneticController(
-            fitness_evaluator=fitness_evaluator,
-            population_size=population_size,
-            sequence_length=sequence_length,
-            mutation_rate=mutation_rate,
-        )
-
-    def __choose_aggression_level(self):
-        try:
-            level = float(input("Enter aggression level (0.5-2.0, default 1.0): ").strip())
-            return max(0.5, min(2.0, level))
-        except ValueError:
-            print("Invalid input, using default aggression level 1.0")
-            return 1.0
-
-    def __choose_balance_weights(self):
-        try:
-            aggression = float(input("Enter aggression weight (0.0-1.0, default 0.3): ").strip())
-            aggression = max(0.0, min(1.0, aggression))
-            cooperation = 1.0 - aggression
-            print(f"Cooperation weight will be: {cooperation:.2f}")
-            return aggression, cooperation
-        except ValueError:
-            print("Invalid input, using default weights: aggression=0.3, cooperation=0.7")
-            return 0.3, 0.7
-
-    def __choose_population_size(self):
-        try:
-            size = int(input("Enter population size (10-100, default 20): ").strip())
-            return max(10, min(100, size))
-        except ValueError:
-            print("Invalid input, using default population size 20")
-            return 20
-
-    def __choose_sequence_length(self):
-        try:
-            length = int(input("Enter sequence length (50-500, default 100): ").strip())
-            return max(50, min(500, length))
-        except ValueError:
-            print("Invalid input, using default sequence length 100")
-            return 100
-
-    def __choose_mutation_rate(self):
-        try:
-            rate = float(input("Enter mutation rate (0.01-0.5, default 0.05): ").strip())
-            return max(0.01, min(0.5, rate))
-        except ValueError:
-            print("Invalid input, using default mutation rate 0.05")
-            return 0.05

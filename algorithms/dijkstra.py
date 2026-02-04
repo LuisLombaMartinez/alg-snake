@@ -1,13 +1,14 @@
 import heapq
+from typing import Dict, Optional, Tuple
 from algorithms.algorithm import PathAlgorithm
-from utils.move_utils import get_random_move
+from algorithms.path_utils import reconstruct_path
 
 
 class Dijkstra(PathAlgorithm):
     def find_path(self, start, goal, blocked, grid_size, max_steps=None, prev=None):
         width, height = grid_size
         heap = [(0, start)]
-        came_from = {start: None}
+        came_from: Dict[Tuple[int, int], Optional[Tuple[int, int]]] = {start: None}
         cost = {start: 0}
         dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
         steps = 0
@@ -32,14 +33,4 @@ class Dijkstra(PathAlgorithm):
                     heapq.heappush(heap, (new_cost, nxt))
                     came_from[nxt] = cur
 
-        if goal not in came_from or steps >= max_steps:
-            return [get_random_move(start, prev=prev)], steps
-
-        path = []
-        cur = goal
-        while cur != start:
-            path.append(cur)
-            cur = came_from[cur]
-        path.reverse()
-
-        return path, steps  # Return path and number of steps taken
+        return reconstruct_path(came_from, start, goal, steps, max_steps, prev)

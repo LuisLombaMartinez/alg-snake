@@ -4,7 +4,13 @@ from utils.move_utils import DIRECTION_DELTAS
 
 
 class ReplayController(Controller):
-    def __init__(self, moves: list[tuple[int, int]]):
+    def __init__(self, moves: list[str]):
+        """
+        Initialize replay controller with a list of direction strings.
+
+        Args:
+            moves: List of direction strings ("up", "down", "left", "right")
+        """
         self.moves = moves
         self.current_index = 0
 

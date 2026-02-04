@@ -8,10 +8,10 @@ class PathAlgorithm(ABC):
         self,
         start: tuple[int, int],
         goal: tuple[int, int],
-        prev: tuple[int, int] | None,
         blocked: set[tuple[int, int]],
         grid_size: tuple[int, int],
-        max_steps: int,
+        max_steps: int | None = None,
+        prev: tuple[int, int] | None = None,
     ) -> tuple[list[tuple[int, int]], int]:
         """
         Find a path from start to goal, avoiding blocked cells.
@@ -26,9 +26,7 @@ class PathAlgorithm(ABC):
         """
         return self.__class__.__name__
 
-    def get_random_move(
-        self, start: tuple[int, int], prev: tuple[int, int] = None
-    ) -> tuple[int, int]:
+    def get_random_move(self, start: tuple[int, int], prev: tuple[int, int] | None = None) -> tuple[int, int]:
         """
         Returns a random move from the start position, excluding the direction it came from.
         - start: current head position

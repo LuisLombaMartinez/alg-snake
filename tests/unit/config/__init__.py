@@ -1,3 +1,0 @@
-"""
-Configuration unit tests package.
-"""

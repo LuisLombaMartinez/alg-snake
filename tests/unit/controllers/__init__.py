@@ -1,3 +1,0 @@
-"""
-Controllers unit tests package.
-"""

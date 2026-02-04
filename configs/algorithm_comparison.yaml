@@ -1,0 +1,45 @@
+# Algorithm Comparison Test
+# Compare BFS, Dijkstra, and A* with different heuristics
+
+game:
+  width: 60
+  height: 30
+  cell_size: 12
+  fps: 25
+  background_color: [0, 0, 0]
+  grid_color: [40, 40, 40]
+
+snakes:
+  - name: "BFS"
+    start_position: [10, 15]
+    color: [255, 100, 100]
+    controller:
+      type: "algorithmic"
+      algorithm: "bfs"
+      max_steps: 1500
+  
+  - name: "Dijkstra"
+    start_position: [30, 15]
+    color: [100, 255, 100]
+    controller:
+      type: "algorithmic"
+      algorithm: "dijkstra"
+      max_steps: 1500
+  
+  - name: "A* Manhattan"
+    start_position: [50, 15]
+    color: [100, 100, 255]
+    controller:
+      type: "algorithmic"
+      algorithm: "astar"
+      heuristic: "manhattan"
+      max_steps: 1500
+  
+  - name: "A* Euclidean"
+    start_position: [20, 5]
+    color: [255, 255, 100]
+    controller:
+      type: "algorithmic"
+      algorithm: "astar"
+      heuristic: "euclidean"
+      max_steps: 1500

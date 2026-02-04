@@ -1,19 +1,21 @@
 # ai/astar.py
 
 import heapq
+from typing import Dict, Optional, Tuple
 from algorithms.algorithm import ConfigurableAlgorithm
 from algorithms.heuristics import Heuristic, ManhattanDistance
-from utils.move_utils import get_random_move
+from algorithms.path_utils import reconstruct_path
 
 
 class AStar(ConfigurableAlgorithm):
-    def __init__(self, heuristic: Heuristic):
-        self.heuristic = heuristic or ManhattanDistance()
+    def __init__(self, heuristic: Heuristic | None = None):
+        """Initialize A* with optional heuristic (defaults to Manhattan distance)."""
+        self.heuristic = heuristic if heuristic else ManhattanDistance()
 
     def find_path(self, start, goal, blocked, grid_size, max_steps=None, prev=None):
         width, height = grid_size
         open_set = [(0, start)]
-        came_from = {}
+        came_from: Dict[Tuple[int, int], Optional[Tuple[int, int]]] = {}
         g_score = {start: 0}
         visited = set()
         steps = 0
@@ -27,12 +29,7 @@ class AStar(ConfigurableAlgorithm):
             visited.add(current)
 
             if current == goal:
-                path = []
-                while current != start:
-                    path.append(current)
-                    current = came_from[current]
-                path.reverse()
-                return path, steps
+                return reconstruct_path(came_from, start, goal, steps, max_steps, prev)
 
             x, y = current
             for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
@@ -49,4 +46,4 @@ class AStar(ConfigurableAlgorithm):
                     f_score = tentative_g + self.heuristic(neighbor, goal)
                     heapq.heappush(open_set, (int(f_score), neighbor))
 
-        return [get_random_move(start, prev)], steps
+        return reconstruct_path(came_from, start, goal, steps, max_steps, prev)

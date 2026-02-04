@@ -1,0 +1,28 @@
+# Default Configuration - A* vs Dijkstra
+# Simple two-snake game demonstrating pathfinding algorithms
+
+game:
+  width: 50
+  height: 50
+  cell_size: 15
+  fps: 20
+  background_color: [0, 0, 0]      # black
+  grid_color: [255, 255, 255]      # white
+
+snakes:
+  - name: "A* Snake"
+    start_position: [5, 5]
+    color: [0, 255, 0]              # green
+    controller:
+      type: "algorithmic"
+      algorithm: "astar"
+      heuristic: "manhattan"
+      max_steps: 1000
+  
+  - name: "Dijkstra Snake"
+    start_position: [5, 15]
+    color: [0, 0, 255]              # blue
+    controller:
+      type: "algorithmic"
+      algorithm: "dijkstra"
+      max_steps: 1000
