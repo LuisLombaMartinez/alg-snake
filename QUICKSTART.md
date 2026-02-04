@@ -7,8 +7,22 @@
 git clone https://github.com/luislombamartinez/alg-snake.git
 cd alg-snake
 
+# (Optional but recommended) Create a virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
 # Install dependencies
-pip install -r requirements.txt
+pip install -e .           # Installs from pyproject.toml
+# OR
+pip install -r requirements.txt  # Traditional method
+```
+
+## For Development
+
+```bash
+# Install with development dependencies
+pip install -e ".[dev]"
+# This includes: pytest, ruff, mypy, pre-commit, etc.
 ```
 
 ## Running the Game
@@ -137,7 +151,7 @@ Available colors (use in `color` field):
 
 **Check Python version:**
 ```bash
-python --version  # Should be 3.14+
+python --version  # Should be 3.13+
 ```
 
 **Reinstall dependencies:**

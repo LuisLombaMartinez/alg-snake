@@ -4,7 +4,7 @@
 
 A well-architected Snake game implementation designed for computer science education. Perfect for students from introductory programming through advanced algorithms courses.
 
-[![Python 3.14+](https://img.shields.io/badge/python-3.14+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ## 🎓 Educational Goals
@@ -66,7 +66,9 @@ This project serves as a **multi-level learning resource** suitable for:
 
 ### Prerequisites
 
-- **Python 3.14+** ([Download](https://www.python.org/downloads/))
+- **Python 3.13+** ([Download](https://www.python.org/downloads/))
+  - Latest LTS version recommended
+  - Code compatible with Python 3.12+
 - pygame library
 
 ### Installation

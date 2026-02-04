@@ -1,20 +1,21 @@
 import pygame
-from .grid_item import GridItem
-from controllers.controller import Controller
+
 from config.colors import WHITE
-from typing import List, Tuple
+from controllers.controller import Controller
+
+from .grid_item import GridItem
 
 
 class Snake(GridItem):
-    def __init__(self, name: str, start_pos, color, controller: Controller):
+    def __init__(self, name: str, start_pos: tuple[int, int], color: tuple[int, int, int], controller: Controller):
         self.name = name
-        self.body = [start_pos]
+        self.body: list[tuple[int, int]] = [start_pos]
         self.color = color
         self.alive = True
         self.score = 0
         self.controller = controller
 
-    def head(self):
+    def head(self) -> tuple[int, int]:
         return self.body[0]
 
     def move(self, new_head, grow=False):
@@ -43,8 +44,8 @@ class Snake(GridItem):
 
 class SnakeInfo:
     def __init__(self, snake: Snake):
-        self.head: Tuple[int, int] = snake.head()
-        self.body: List[Tuple[int, int]] = snake.body[1:]  # Exclude head from body for display
+        self.head: tuple[int, int] = snake.head()
+        self.body: list[tuple[int, int]] = snake.body[1:]  # Exclude head from body for display
         self.alive: bool = snake.alive
 
     def __str__(self):

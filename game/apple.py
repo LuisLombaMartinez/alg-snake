@@ -1,6 +1,8 @@
 import pygame
-from .grid_item import GridItem
+
 from config.colors import RED
+
+from .grid_item import GridItem
 
 
 class Apple(GridItem):
@@ -17,6 +19,4 @@ class Apple(GridItem):
 
     def draw(self, screen, cell_size):
         x, y = self.pos
-        pygame.draw.rect(
-            screen, self.color, (x * cell_size, y * cell_size, cell_size, cell_size)
-        )
+        pygame.draw.rect(screen, self.color, (x * cell_size, y * cell_size, cell_size, cell_size))

@@ -13,6 +13,4 @@ class StepLimitedPathfinder:
         """
         Intercepts the find_path method and injects step limit if supported.
         """
-        return self.algorithm.find_path(
-            start, goal, blocked, grid_size, max_steps=self.max_steps, prev=prev
-        )
+        return self.algorithm.find_path(start, goal, blocked, grid_size, max_steps=self.max_steps, prev=prev)

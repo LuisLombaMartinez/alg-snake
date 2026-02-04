@@ -1,7 +1,8 @@
-from typing import Tuple, Any
+from typing import Any
+
+from algorithms.step_limiter import StepLimitedPathfinder
 from controllers.controller import Controller
 from game.snake import Snake
-from algorithms.step_limiter import StepLimitedPathfinder
 
 
 class AlgorithmicController(Controller):
@@ -9,7 +10,7 @@ class AlgorithmicController(Controller):
         self.step_limited = step_limited
         self.total_steps = 0
 
-    def get_next_move(self, snake: Snake, grid_size: Tuple[int, int], **kwargs: Any) -> Tuple[int, int]:
+    def get_next_move(self, snake: Snake, grid_size: tuple[int, int], **kwargs: Any) -> tuple[int, int]:
         apple_pos = kwargs.get("apple_pos")
         blocked_cells = kwargs.get("blocked_cells", set())
         prev = snake.body[1] if len(snake.body) > 1 else snake.head()
@@ -23,8 +24,9 @@ class AlgorithmicController(Controller):
         )
         self.total_steps += steps
         # Guarantee a tuple is returned
-        if path and isinstance(path[0], tuple):
-            return path[0]
+        if path and len(path) > 0:
+            next_move: tuple[int, int] = path[0]
+            return next_move
         return snake.head()
 
     def get_display_info(self) -> str:

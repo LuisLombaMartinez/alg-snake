@@ -1,5 +1,6 @@
-from game.grid_item import GridItem
 import pygame
+
+from game.grid_item import GridItem
 
 
 class Grid:
@@ -27,9 +28,9 @@ class Grid:
             occupied |= item.position_cells()
         return occupied
 
-    def in_bounds(self, pos) -> bool:
+    def in_bounds(self, pos: tuple[int, int]) -> bool:
         x, y = pos
-        return 0 <= x < self.width and 0 <= y < self.height
+        return bool(0 <= x < self.width and 0 <= y < self.height)
 
     def get_size(self):
         return (self.width, self.height)

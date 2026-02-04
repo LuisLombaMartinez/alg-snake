@@ -3,18 +3,17 @@ Utility functions for pathfinding algorithms.
 Consolidates common logic to avoid code duplication.
 """
 
-from typing import Dict, Tuple, List, Optional
 from utils.move_utils import get_random_move
 
 
 def reconstruct_path(
-    came_from: Dict[Tuple[int, int], Optional[Tuple[int, int]]],
-    start: Tuple[int, int],
-    goal: Tuple[int, int],
+    came_from: dict[tuple[int, int], tuple[int, int] | None],
+    start: tuple[int, int],
+    goal: tuple[int, int],
     steps: int,
-    max_steps: Optional[int] = None,
-    prev: Optional[Tuple[int, int]] = None,
-) -> Tuple[List[Tuple[int, int]], int]:
+    max_steps: int | None = None,
+    prev: tuple[int, int] | None = None,
+) -> tuple[list[tuple[int, int]], int]:
     """
     Reconstruct path from came_from dictionary.
 
@@ -45,8 +44,8 @@ def reconstruct_path(
 
 
 def is_valid_position(
-    pos: Tuple[int, int],
-    grid_size: Tuple[int, int],
+    pos: tuple[int, int],
+    grid_size: tuple[int, int],
     blocked: set,
 ) -> bool:
     """
@@ -66,10 +65,10 @@ def is_valid_position(
 
 
 def get_neighbors(
-    pos: Tuple[int, int],
-    grid_size: Tuple[int, int],
+    pos: tuple[int, int],
+    grid_size: tuple[int, int],
     blocked: set,
-) -> List[Tuple[int, int]]:
+) -> list[tuple[int, int]]:
     """
     Get valid neighboring positions (up, down, left, right).
 

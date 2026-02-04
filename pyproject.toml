@@ -1,0 +1,204 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "alg-snake"
+version = "2.0.0"
+description = "Educational Snake game demonstrating pathfinding algorithms"
+readme = "README.md"
+requires-python = ">=3.13"
+license = {text = "MIT"}
+authors = [
+    {name = "Luis Lomba Martinez", email = "luislombamartinez@gmail.com"},
+]
+keywords = ["snake", "game", "pathfinding", "algorithms", "education", "pygame"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Education",
+    "Topic :: Games/Entertainment :: Arcade",
+]
+
+dependencies = [
+    "pygame>=2.6.0",  # Using >= to allow pip to find best available wheel
+    "PyYAML>=6.0.2",
+    "pydantic>=2.10.5",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.1.0",
+    "pytest-benchmark>=5.1.0",
+    "pytest-xdist>=3.6.1",
+    "hypothesis>=6.122.3",
+    "ruff>=0.8.0",
+    "mypy>=1.13.0",
+    "types-PyYAML>=6.0.0",  # Type stubs for PyYAML
+    "pre-commit>=3.6.0",
+]
+
+# Note: To run the game, use: python main.py
+# The project is not yet structured as an installable package
+
+# Package discovery - explicitly include source packages
+[tool.setuptools.packages.find]
+include = ["algorithms", "config", "controllers", "game", "utils"]
+exclude = ["tests*", "replays*", "configs*"]
+
+[project.urls]
+Homepage = "https://github.com/LuisLombaMartinez/alg-snake"
+Repository = "https://github.com/LuisLombaMartinez/alg-snake"
+Issues = "https://github.com/LuisLombaMartinez/alg-snake/issues"
+
+# =============================================================================
+# Ruff Configuration - Modern Python linter and formatter
+# =============================================================================
+[tool.ruff]
+# Target Python 3.13 (latest LTS)
+target-version = "py313"
+line-length = 120
+indent-width = 4
+
+# Include and exclude patterns
+include = ["*.py", "*.pyi"]
+extend-exclude = [
+    "__pycache__",
+    ".venv",
+    "venv",
+    ".git",
+    "htmlcov",
+    ".pytest_cache",
+    "*.egg-info",
+]
+
+[tool.ruff.lint]
+# Enable recommended rules + additional helpful ones
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # pyflakes
+    "I",      # isort (import sorting)
+    "N",      # pep8-naming
+    "UP",     # pyupgrade (modern Python syntax)
+    "B",      # flake8-bugbear (bug detection)
+    "C4",     # flake8-comprehensions
+    "SIM",    # flake8-simplify
+    "RUF",    # Ruff-specific rules
+]
+
+# Disable specific rules that might be too strict for educational code
+ignore = [
+    "E501",   # Line too long (handled by formatter)
+    "N802",   # Function name should be lowercase (allow camelCase for pygame)
+    "N806",   # Variable in function should be lowercase (allow camelCase)
+    "SIM108", # Use ternary operator (can be less readable for students)
+]
+
+# Allow autofix for all enabled rules
+fixable = ["ALL"]
+unfixable = []
+
+[tool.ruff.format]
+# Use double quotes for strings
+quote-style = "double"
+# Use spaces for indentation
+indent-style = "space"
+# Respect magic trailing comma
+skip-magic-trailing-comma = false
+# Auto-detect line ending
+line-ending = "auto"
+
+[tool.ruff.lint.isort]
+# Organize imports in sections
+known-first-party = ["algorithms", "config", "controllers", "game", "genetics", "utils"]
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+
+# =============================================================================
+# MyPy Configuration - Static type checker
+# =============================================================================
+[tool.mypy]
+python_version = "3.13"
+explicit_package_bases = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false  # Allow some untyped functions for now
+disallow_incomplete_defs = false
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+show_error_codes = true
+
+# Install missing type stubs automatically
+install_types = true
+non_interactive = true
+
+# Gradually introduce stricter checking for specific modules
+# (Currently commented out - uncomment when adding more type hints)
+# [[tool.mypy.overrides]]
+# module = [
+#     "config.*",
+#     "algorithms.*",
+# ]
+# disallow_untyped_defs = true
+
+# Ignore missing imports for third-party libraries without stubs
+[[tool.mypy.overrides]]
+module = [
+    "pygame.*",
+]
+ignore_missing_imports = true
+
+# =============================================================================
+# Pytest Configuration
+# =============================================================================
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-ra",                    # Show summary of all test outcomes
+    "--strict-markers",       # Raise error on unknown markers
+    "--strict-config",        # Raise error on config issues
+    "--showlocals",           # Show local variables in tracebacks
+    "-v",                     # Verbose output
+]
+
+# Coverage settings
+[tool.coverage.run]
+source = ["."]
+omit = [
+    "*/tests/*",
+    "*/test_*.py",
+    "*/__pycache__/*",
+    "*/.venv/*",
+    "*/venv/*",
+]
+branch = true
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+skip_covered = false
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "@abstractmethod",
+]
+
+[tool.coverage.html]
+directory = "htmlcov"

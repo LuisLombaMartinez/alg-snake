@@ -11,7 +11,7 @@ class Configuration:
         background_color=colors.BLACK,
         grid_color=colors.WHITE,
         fps=10,
-        snakes: list[Snake] = [],
+        snakes: list[Snake] | None = None,
     ):
         self.background_color = background_color
         self.grid_color = grid_color
@@ -19,7 +19,7 @@ class Configuration:
         self.width = width
         self.height = height
         self.cell_size = cell_size
-        self.snakes = snakes
+        self.snakes = snakes if snakes is not None else []
 
     def get_fps(self):
         return self.fps

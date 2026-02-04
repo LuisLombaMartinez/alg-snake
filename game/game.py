@@ -1,18 +1,19 @@
 import random
-from typing import Optional
+
 import pygame
-from controllers.human_controller import HumanController, KEY_TO_DIR
+
+from config.configuration import Configuration
+from config.configurator import Configurator
+from controllers.human_controller import KEY_TO_DIR, HumanController
 from game.apple import Apple
 from game.grid import Grid
-from config.configurator import Configurator
-from config.configuration import Configuration
 from game.snake import SnakeInfo
 
 
 class Game:
     def __init__(
         self,
-        config: Optional[Configuration] = None,
+        config: Configuration | None = None,
     ):
         if config is None:
             raise ValueError("Configuration is required")
@@ -22,7 +23,7 @@ class Game:
         for snake in config.snakes:
             self.grid.add_item(snake)
         self.snakes = config.snakes
-        self.apple = None
+        self.apple: Apple | None = None  # Explicitly type as optional
         self.spawn_apple()
 
     @classmethod
@@ -141,9 +142,8 @@ class Game:
                     running = False
                 elif event.type == pygame.KEYDOWN:
                     for snake in self.snakes:
-                        if isinstance(snake.controller, HumanController):
-                            if event.key in KEY_TO_DIR:
-                                snake.controller.last_dir = KEY_TO_DIR[event.key]
+                        if isinstance(snake.controller, HumanController) and event.key in KEY_TO_DIR:
+                            snake.controller.last_dir = KEY_TO_DIR[event.key]
 
             # Execute game step and check if game should continue
             game_continues = self.step()

@@ -4,69 +4,145 @@ Quick reference for development phases. Work on these in order, in your free tim
 
 ---
 
-## Phase 1: Python 3.14 + Modern Tooling ⏳ CURRENT
+## Phase 1: Python 3.13 + Modern Tooling ✅ COMPLETE
 
 ### Goals
-- Update to Python 3.14
+- Update to Python 3.13 (latest LTS)
 - Add modern development tools (linting, formatting, type checking)
 - Professional development workflow
 
-### Tasks
-- [x] Add Pydantic for YAML validation ✅ **DONE**
-- [x] Simplify Configurator interface (9+ methods → 1) ✅ **DONE**
-- [x] Fix all type errors ✅ **DONE**
-- [x] Update some type hints to use `| None` syntax ✅ **PARTIAL**
-- [ ] Remove old `typing` imports (`Tuple`, `Optional`, `List`, `Dict`)
-- [ ] Replace with built-in types (`tuple[int, int]`, `X | None`)
-- [ ] Create `.python-version` file: `3.14`
-- [ ] Update `requirements.txt` for Python 3.14 compatibility
-- [ ] Create `pyproject.toml` with project metadata and tool configs
-- [ ] Add `ruff` for linting and formatting
-- [ ] Add `mypy` for strict type checking
-- [ ] Add `.pre-commit-config.yaml` for automated checks
-- [ ] Fix any remaining linting/type errors
+### Completed Tasks
+- [x] Add Pydantic for YAML validation ✅
+- [x] Simplify Configurator interface (9+ methods → 1) ✅
+- [x] Fix all type errors ✅
+- [x] Update all type hints to use modern syntax (`| None`, `list[]`, `dict[]`, `tuple[]`) ✅
+- [x] Create `.python-version` file: `3.13` ✅
+- [x] Remove old `typing` imports (`Tuple`, `Optional`, `List`, `Dict`) ✅
+- [x] Update `requirements.txt` for Python 3.13 ✅
+- [x] Create `pyproject.toml` with project metadata and tool configs ✅
+- [x] Add `ruff` for linting and formatting (replaces flake8 + black) ✅
+- [x] Add `mypy` for strict type checking ✅
+- [x] Consolidate dependencies in `pyproject.toml` ✅
+- [x] Version consistency across all files (3.13+) ✅
 
-### Estimated Time
-**Original**: 2-4 hours  
-**Remaining**: 1-2 hours
+### How to Use Modern Tooling
 
-### Files to Update (~8-10 remaining)
-Files still using old typing imports:
-- `game/game.py`
-- `game/snake.py`
-- `controllers/controller.py`
-- `controllers/algorithmic_controller.py`
-- `algorithms/path_utils.py`
-- `algorithms/bfs.py`
-- `algorithms/dijkstra.py`
-- `algorithms/a_star.py`
+```bash
+# Install development dependencies
+pip install -e ".[dev]"
+
+# Run linter and auto-fix issues
+ruff check --fix .
+
+# Format code
+ruff format .
+
+# Type checking
+mypy .
+
+# Run all checks together
+ruff check . && ruff format --check . && mypy .
+```
+
+### Notes
+- Project targets Python 3.13+ (latest LTS for future-proofing)
+- Code remains compatible with Python 3.12+
+- `requirements.txt` and `requirements-dev.txt` kept for backward compatibility
+- `ruff` replaces both `flake8` and `black` (faster, more modern, all-in-one)
+- All modern Python 3.10+ syntax features are used throughout
 
 ---
 
-## Phase 2: Expand Test Coverage
+## Phase 2: Expand Test Coverage ⏳ CURRENT
 
 ### Goals
-- Increase coverage from ~40% to 70%+
-- Test untested components
+- Increase coverage from ~0% to 70%+
+- Test all major components
+- Discover bugs through testing
 
 ### New Test Files Needed
 ```
 tests/unit/
+  - test_algorithms.py        (A*, Dijkstra, BFS correctness)
+  - test_heuristics.py        (Manhattan, Euclidean distances)
   - test_controllers.py       (algorithmic, human, random, replay)
   - test_configuration.py     (YAML loading, validation)
-  - test_collision_detection.py
+  - test_snake.py             (movement, collision basics)
+  - test_grid.py              (bounds checking, cell tracking)
 
 tests/integration/
   - test_full_game.py         (end-to-end scenarios)
   - test_algorithm_comparison.py
+  - test_collision_scenarios.py  (comprehensive collision testing)
 ```
 
+### Key Testing Areas
+1. **Algorithm Correctness**
+   - Do algorithms find valid paths?
+   - Do they handle blocked cells correctly?
+   - Edge cases: no path available, surrounded snake
+
+2. **Configuration Validation**
+   - Valid YAML loads correctly
+   - Invalid YAML raises proper errors
+   - Pydantic catches bad values
+
+3. **Game Logic**
+   - Apple spawning
+   - Score tracking
+   - Game over conditions
+
+4. **Collision Detection** (will expose bugs to fix in Phase 3)
+   - Wall collisions
+   - Self-collisions
+   - Snake-to-snake collisions
+   - Head-to-head collisions
+
 ### Estimated Time
-4-6 hours
+6-8 hours (testing often reveals bugs that need investigation)
 
 ---
 
-## Phase 3: CI/CD
+## Phase 3: Bug Fixes from Testing 🐛 NEW
+
+### Goals
+- Fix issues discovered during test writing
+- Ensure collision detection works correctly
+- Address any other bugs found
+
+### Known Issues
+1. **Collision Detection Timing** ⚠️
+   - Current: Collisions checked AFTER all snakes move
+   - Problem: One-frame delay in collision detection
+   - Impact: Head-to-head collisions may not work correctly
+   - Solution: Check collisions using `next_positions` BEFORE moving
+
+2. **To Be Discovered**
+   - Additional issues will be added as tests reveal them
+   - May include edge cases in algorithms
+   - Configuration edge cases
+   - Game state management issues
+
+### Implementation Notes
+```python
+# Current (buggy) approach in game.py:
+# 1. Get all next moves -> next_positions
+# 2. Move all snakes
+# 3. Check collisions  # ❌ Too late!
+
+# Better approach:
+# 1. Get all next moves -> next_positions
+# 2. Check collisions using next_positions  # ✅ Before moving
+# 3. Mark dead snakes
+# 4. Move surviving snakes
+```
+
+### Estimated Time
+3-4 hours (depends on number of bugs found)
+
+---
+
+## Phase 4: CI/CD
 
 ### Goals
 - Automate testing on every push
@@ -85,7 +161,7 @@ tests/integration/
 
 ---
 
-## Phase 4: Algorithm Visualization
+## Phase 5: Algorithm Visualization
 
 ### Goals
 - Show how algorithms explore the grid
@@ -110,7 +186,7 @@ algorithms/
 
 ---
 
-## Phase 5: Learning Exercises
+## Phase 6: Learning Exercises
 
 ### Goals
 - Structured challenges for different levels
@@ -140,7 +216,7 @@ exercises/
 
 ---
 
-## Phase 6: Jupyter Notebooks (Optional)
+## Phase 7: Jupyter Notebooks (Optional)
 
 ### Goals
 - Interactive tutorials
@@ -222,7 +298,7 @@ Real ML with Stable-Baselines3
 ## Quick Progress Tracking
 
 ```
-Phase 1: Python 3.14 + Tooling     [~] 60% Complete
+Phase 1: Python 3.13 + Tooling     [~] 60% Complete
   ✅ Pydantic schema validation
   ✅ Configurator interface simplified  
   ✅ Type errors fixed
@@ -256,7 +332,7 @@ Mark with `[x]` as you complete each phase, `[~]` for in-progress.
 ✅ **Documentation consolidated to 3 files** (README, QUICKSTART, PROJECT_PLAN)  
 ✅ **Pydantic validation** implemented for YAML configs  
 ✅ **Configurator interface simplified** (9+ methods → 1 abstract method)  
-✅ **All type errors fixed** (14 issues resolved)  
+✅ **All type errors fixed**
 ✅ **Clean codebase** ready for modernization
 
 **Next Steps**: 

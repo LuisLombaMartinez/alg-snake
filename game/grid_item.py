@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class GridItem(ABC):
     @abstractmethod
     def blocked_cells(self) -> set:

@@ -1,12 +1,14 @@
 from pathlib import Path
-from config.configurator import Configurator
-from config.configuration import Configuration
-from config.colors import COLOR_CHOICES
-from algorithms.heuristics import ManhattanDistance, EuclideanDistance, ZeroHeuristic
+
 from algorithms.a_star import AStar
-from algorithms.dijkstra import Dijkstra
+from algorithms.algorithm import PathAlgorithm
 from algorithms.bfs import BFS
+from algorithms.dijkstra import Dijkstra
+from algorithms.heuristics import EuclideanDistance, ManhattanDistance, ZeroHeuristic
 from algorithms.step_limiter import StepLimitedPathfinder
+from config.colors import COLOR_CHOICES
+from config.configuration import Configuration
+from config.configurator import Configurator
 from controllers.algorithmic_controller import AlgorithmicController
 from controllers.human_controller import HumanController
 from controllers.random_controller import RandomController
@@ -77,7 +79,7 @@ class CLIConfigurator(Configurator):
     def _get_config_description(self, config_path):
         """Extract description from first comment line of YAML file."""
         try:
-            with open(config_path, "r") as f:
+            with open(config_path) as f:
                 first_line = f.readline().strip()
                 if first_line.startswith("#"):
                     return first_line[1:].strip()
@@ -193,6 +195,7 @@ class CLIConfigurator(Configurator):
         print("3 - BFS")
         algo_choice = input("Enter choice [1-3]: ").strip()
 
+        algo: PathAlgorithm
         if algo_choice == "1":
             heuristic = self.choose_heuristic()
             algo = AStar(heuristic)

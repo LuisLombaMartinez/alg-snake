@@ -12,6 +12,7 @@ import sys
 from pathlib import Path
 
 from config.cli_configurator import CLIConfigurator
+from config.configurator import Configurator
 from config.yaml_configurator import YAMLConfigurator
 from game.game import Game
 
@@ -56,7 +57,7 @@ def list_example_configs():
 
         # Try to read first comment line as description
         try:
-            with open(config_file, "r") as f:
+            with open(config_file) as f:
                 first_line = f.readline().strip()
                 if first_line.startswith("#"):
                     print(f"    {first_line[1:].strip()}")
@@ -77,6 +78,7 @@ def main():
         return
 
     # Determine configurator to use
+    configurator: Configurator
     if args.config:
         # Direct YAML loading (skip menu)
         config_path = Path(args.config)

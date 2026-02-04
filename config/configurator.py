@@ -12,6 +12,7 @@ Design Philosophy:
 """
 
 from abc import ABC, abstractmethod
+
 from config.configuration import Configuration
 
 

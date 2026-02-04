@@ -1,4 +1,5 @@
 import pygame
+
 from controllers.controller import Controller
 from game.snake import Snake
 
@@ -14,7 +15,7 @@ class HumanController(Controller):
     def __init__(self):
         self.last_dir: tuple[int, int] = (1, 0)  # start moving right
 
-    def get_next_move(self, snake: Snake, grid_size, **kwargs) -> tuple[int, int]:
+    def get_next_move(self, snake: Snake, grid_size: tuple[int, int], **kwargs) -> tuple[int, int]:
         head_x, head_y = snake.head()
         dx, dy = self.last_dir
         next_pos = (head_x + dx, head_y + dy)

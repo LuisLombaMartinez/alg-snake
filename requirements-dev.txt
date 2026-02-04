@@ -1,16 +1,28 @@
 # Development and Testing Dependencies
-# Install with: pip install -r requirements-dev.txt
+# Python 3.13+ required
+#
+# DEPRECATED: This file is kept for backward compatibility only.
+# The canonical dependency list is in pyproject.toml.
+#
+# To install development dependencies, use:
+#   pip install -e ".[dev]"
+#
+# This will install all dependencies from pyproject.toml including:
+# - pytest (testing framework)
+# - pytest-cov (coverage)
+# - pytest-benchmark (performance testing)
+# - pytest-xdist (parallel execution)
+# - hypothesis (property-based testing)
+# - ruff (modern linter + formatter, replaces flake8 + black)
+# - mypy (type checking)
+# - pre-commit (git hooks)
 
-# Testing Framework
-pytest==8.3.4
-pytest-cov==6.0.0
-pytest-benchmark==5.1.0
-pytest-xdist==3.6.1  # For parallel test execution
-
-# Test Utilities
-hypothesis==6.122.3  # Property-based testing (optional, for advanced tests)
-
-# Code Quality
-flake8==7.1.1  # Linting
-black==24.10.0  # Code formatting
-mypy==1.13.0  # Type checking
+# If you must use this file directly:
+pytest>=8.0.0
+pytest-cov>=4.1.0
+pytest-benchmark>=5.1.0
+pytest-xdist>=3.6.1
+hypothesis>=6.122.3
+ruff>=0.8.0
+mypy>=1.13.0
+pre-commit>=3.6.0

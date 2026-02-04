@@ -1,18 +1,18 @@
 from abc import ABC, abstractmethod
-from typing import Tuple, Any
+from typing import Any
 
 
 class Controller(ABC):
     @abstractmethod
-    def get_next_move(self, snake, grid_size: Tuple[int, int], **kwargs: Any) -> Tuple[int, int]:
+    def get_next_move(self, snake, grid_size: tuple[int, int], **kwargs: Any) -> tuple[int, int]:
         """
         Return the next head position for this snake.
-        
+
         Args:
             snake: The Snake instance (inspect head(), body, etc.)
             grid_size: (width, height) of the grid
             **kwargs: Additional context (apple_pos, blocked_cells, etc.)
-        
+
         Returns:
             Next position as (x, y) tuple
         """

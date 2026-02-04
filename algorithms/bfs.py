@@ -1,5 +1,5 @@
 from collections import deque
-from typing import Dict, Tuple, Optional
+
 from algorithms.algorithm import PathAlgorithm
 from algorithms.path_utils import reconstruct_path
 
@@ -8,7 +8,7 @@ class BFS(PathAlgorithm):
     def find_path(self, start, goal, blocked, grid_size, max_steps=None, prev=None):
         width, height = grid_size
         queue = deque([start])
-        came_from: Dict[Tuple[int, int], Optional[Tuple[int, int]]] = {start: None}
+        came_from: dict[tuple[int, int], tuple[int, int] | None] = {start: None}
         dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
         steps = 0
 

@@ -14,13 +14,14 @@ Students will learn:
 - Converting validated data to application objects
 """
 
-import yaml
 from pathlib import Path
+
+import yaml
 from pydantic import ValidationError
 
+from config.configuration import Configuration
 from config.configurator import Configurator
 from config.schemas import ConfigSchema
-from config.configuration import Configuration
 from controllers.algorithmic_controller import AlgorithmicController
 from controllers.human_controller import HumanController
 from controllers.random_controller import RandomController
@@ -63,10 +64,10 @@ class YAMLConfigurator(Configurator):
 
         # Load and validate config immediately in __init__
         try:
-            with open(self.config_path, "r") as f:
+            with open(self.config_path) as f:
                 raw_data = yaml.safe_load(f)
         except yaml.YAMLError as e:
-            raise YAMLConfigurationError(f"Invalid YAML syntax in {self.config_path}:\n{e}")
+            raise YAMLConfigurationError(f"Invalid YAML syntax in {self.config_path}:\n{e}") from e
 
         # Validate with Pydantic schema
         try:
@@ -81,7 +82,7 @@ class YAMLConfigurator(Configurator):
 
             raise YAMLConfigurationError(
                 f"Configuration validation failed for {self.config_path}:\n" + "\n".join(error_messages)
-            )
+            ) from e
 
     def build_configuration(self) -> Configuration:
         """
@@ -102,11 +103,14 @@ class YAMLConfigurator(Configurator):
             # Create controller based on type
             controller = self._create_controller(snake_schema.controller)
 
-            # Create snake
+            # Create snake with explicit type casts
+            start_pos: tuple[int, int] = (snake_schema.start_position[0], snake_schema.start_position[1])
+            color: tuple[int, int, int] = (snake_schema.color[0], snake_schema.color[1], snake_schema.color[2])
+
             snake = Snake(
                 name=snake_schema.name,
-                start_pos=tuple(snake_schema.start_position),
-                color=tuple(snake_schema.color),
+                start_pos=start_pos,
+                color=color,
                 controller=controller,
             )
             snakes.append(snake)
@@ -144,18 +148,22 @@ class YAMLConfigurator(Configurator):
         if controller_schema.type == "algorithmic":
             # Import algorithm classes
             from algorithms.a_star import AStar
-            from algorithms.dijkstra import Dijkstra
+            from algorithms.algorithm import PathAlgorithm
             from algorithms.bfs import BFS
+            from algorithms.dijkstra import Dijkstra
             from algorithms.heuristics import (
-                ManhattanDistance,
                 EuclideanDistance,
+                Heuristic,
+                ManhattanDistance,
                 ZeroHeuristic,
             )
             from algorithms.step_limiter import StepLimitedPathfinder
 
             # Create the base algorithm
+            algorithm: PathAlgorithm
             if controller_schema.algorithm == "astar":
                 # Choose heuristic for A*
+                heuristic: Heuristic
                 if controller_schema.heuristic == "manhattan":
                     heuristic = ManhattanDistance()
                 elif controller_schema.heuristic == "euclidean":

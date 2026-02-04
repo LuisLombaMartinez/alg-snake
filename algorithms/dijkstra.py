@@ -1,5 +1,5 @@
 import heapq
-from typing import Dict, Optional, Tuple
+
 from algorithms.algorithm import PathAlgorithm
 from algorithms.path_utils import reconstruct_path
 
@@ -8,7 +8,7 @@ class Dijkstra(PathAlgorithm):
     def find_path(self, start, goal, blocked, grid_size, max_steps=None, prev=None):
         width, height = grid_size
         heap = [(0, start)]
-        came_from: Dict[Tuple[int, int], Optional[Tuple[int, int]]] = {start: None}
+        came_from: dict[tuple[int, int], tuple[int, int] | None] = {start: None}
         cost = {start: 0}
         dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
         steps = 0

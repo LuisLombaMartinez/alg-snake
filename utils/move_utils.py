@@ -8,9 +8,7 @@ DIRECTION_DELTAS = {
 }
 
 
-def get_random_move(
-    start: tuple[int, int], prev: tuple[int, int] = None
-) -> tuple[int, int]:
+def get_random_move(start: tuple[int, int], prev: tuple[int, int] | None = None) -> tuple[int, int]:
     """
     Returns a random move from the start position, excluding the direction it came from.
     - start: current head position
